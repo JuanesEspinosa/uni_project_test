@@ -1,0 +1,17 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StockManager</title>
+    <script>
+      // Redirige según si hay sesión activa o no
+      if (localStorage.getItem("token")) {
+        window.location.replace("dashboard.html");
+      } else {
+        window.location.replace("login.html");
+      }
+    </script>
+  </head>
+  <body></body>
+</html>

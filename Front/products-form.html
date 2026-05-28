@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Producto — StockManager</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">📦</div>
+          <span class="sidebar-logo-name">StockManager</span>
+        </div>
+        <nav class="sidebar-nav">
+          <span class="sidebar-section-label">General</span>
+          <a href="dashboard.html" class="nav-item">
+            <span class="nav-item-icon">🏠</span> Dashboard
+          </a>
+          <span class="sidebar-section-label">Gestión</span>
+          <a href="products.html" class="nav-item active">
+            <span class="nav-item-icon">📋</span> Productos
+          </a>
+          <a href="sales.html" class="nav-item">
+            <span class="nav-item-icon">🛒</span> Ventas
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div>
+              <div class="user-name" id="user-name">Usuario</div>
+              <div class="user-role" id="user-role">Rol</div>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary btn-sm btn-logout"
+            onclick="logout()"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contenido -->
+      <main class="main">
+        <header class="header">
+          <div>
+            <div class="header-title" id="form-title">Nuevo Producto</div>
+            <div class="header-breadcrumb">
+              <a href="products.html">Productos</a> / Formulario
+            </div>
+          </div>
+        </header>
+
+        <div class="content">
+          <div class="form-page">
+            <div
+              id="alert"
+              class="alert alert-error mt-16"
+              style="margin-bottom: 16px"
+            ></div>
+
+            <div class="form-card">
+              <form id="product-form" novalidate>
+                <div class="form-grid">
+                  <div class="form-group form-full">
+                    <label for="name">Nombre del producto *</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      placeholder="Ej: Perfume Rosas 50ml"
+                    />
+                    <span id="name-error" class="field-error"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="price">Precio (COP) *</label>
+                    <input
+                      type="number"
+                      id="price"
+                      name="price"
+                      placeholder="0"
+                      min="0"
+                      step="100"
+                    />
+                    <span id="price-error" class="field-error"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="stock">Stock inicial</label>
+                    <input
+                      type="number"
+                      id="stock"
+                      name="stock"
+                      placeholder="0"
+                      min="0"
+                      value="0"
+                    />
+                    <span id="stock-error" class="field-error"></span>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="category">Categoría</label>
+                    <input
+                      type="text"
+                      id="category"
+                      name="category"
+                      placeholder="Ej: Perfumes"
+                    />
+                  </div>
+
+                  <div class="form-group form-full">
+                    <label for="description">Descripción</label>
+                    <textarea
+                      id="description"
+                      name="description"
+                      placeholder="Descripción opcional del producto"
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div class="form-actions">
+                  <button type="submit" id="submit-btn" class="btn btn-primary">
+                    Crear Producto
+                  </button>
+                  <a href="products.html" class="btn btn-secondary">Cancelar</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script>
+      initProductForm();
+    </script>
+  </body>
+</html>

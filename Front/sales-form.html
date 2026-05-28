@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nueva Venta — StockManager</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">📦</div>
+          <span class="sidebar-logo-name">StockManager</span>
+        </div>
+        <nav class="sidebar-nav">
+          <span class="sidebar-section-label">General</span>
+          <a href="dashboard.html" class="nav-item">
+            <span class="nav-item-icon">🏠</span> Dashboard
+          </a>
+          <span class="sidebar-section-label">Gestión</span>
+          <a href="products.html" class="nav-item">
+            <span class="nav-item-icon">📋</span> Productos
+          </a>
+          <a href="sales.html" class="nav-item active">
+            <span class="nav-item-icon">🛒</span> Ventas
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div>
+              <div class="user-name" id="user-name">Usuario</div>
+              <div class="user-role" id="user-role">Rol</div>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary btn-sm btn-logout"
+            onclick="logout()"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contenido -->
+      <main class="main">
+        <header class="header">
+          <div>
+            <div class="header-title">Nueva Venta</div>
+            <div class="header-breadcrumb">
+              <a href="sales.html">Ventas</a> / Nueva venta
+            </div>
+          </div>
+        </header>
+
+        <div class="content">
+          <div
+            id="alert"
+            class="alert alert-error"
+            style="margin-bottom: 16px"
+          ></div>
+
+          <form id="sale-form" novalidate>
+            <div class="sale-form-grid">
+              <!-- Columna izquierda: cliente + productos -->
+              <div>
+                <!-- Cliente -->
+                <div class="card" style="margin-bottom: 16px">
+                  <div class="card-header">
+                    <span class="card-title">👤 Cliente</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group">
+                      <label for="client-id">Selecciona el cliente *</label>
+                      <select id="client-id" name="client-id">
+                        <option value="">Cargando clientes...</option>
+                      </select>
+                      <span id="client-error" class="field-error"></span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Productos -->
+                <div class="card" style="margin-bottom: 16px">
+                  <div class="card-header">
+                    <span class="card-title">🛍️ Productos</span>
+                  </div>
+                  <div class="card-body">
+                    <span
+                      id="items-error"
+                      class="field-error"
+                      style="margin-bottom: 8px; display: block"
+                    ></span>
+
+                    <div id="items-container" class="sale-items-list"></div>
+
+                    <button
+                      type="button"
+                      id="btn-add-item"
+                      class="btn btn-add-item mt-16"
+                    >
+                      + Agregar producto
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Notas -->
+                <div class="card">
+                  <div class="card-header">
+                    <span class="card-title">📝 Notas (opcional)</span>
+                  </div>
+                  <div class="card-body">
+                    <div class="form-group">
+                      <textarea
+                        id="notes"
+                        name="notes"
+                        placeholder="Observaciones sobre la venta..."
+                      ></textarea>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Columna derecha: resumen -->
+              <div class="sale-summary">
+                <div class="sale-summary-title">Resumen de la venta</div>
+
+                <div class="sale-summary-row">
+                  <span>Productos</span>
+                  <span id="item-count">0</span>
+                </div>
+
+                <div class="sale-total-row">
+                  <span>Total</span>
+                  <span id="sale-total" style="color: var(--primary)">$0</span>
+                </div>
+
+                <button
+                  type="submit"
+                  id="submit-btn"
+                  class="btn btn-success"
+                  style="
+                    width: 100%;
+                    justify-content: center;
+                    margin-top: 20px;
+                    padding: 12px;
+                  "
+                >
+                  ✓ Registrar Venta
+                </button>
+                <a
+                  href="sales.html"
+                  class="btn btn-secondary"
+                  style="width: 100%; justify-content: center; margin-top: 8px"
+                >
+                  Cancelar
+                </a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/sales.js"></script>
+    <script>
+      initSaleForm();
+    </script>
+  </body>
+</html>

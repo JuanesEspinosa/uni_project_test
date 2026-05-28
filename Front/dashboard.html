@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard — StockManager</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">📦</div>
+          <span class="sidebar-logo-name">StockManager</span>
+        </div>
+
+        <nav class="sidebar-nav">
+          <span class="sidebar-section-label">General</span>
+          <a href="dashboard.html" class="nav-item active">
+            <span class="nav-item-icon">🏠</span> Dashboard
+          </a>
+
+          <span class="sidebar-section-label">Gestión</span>
+          <a href="products.html" class="nav-item">
+            <span class="nav-item-icon">📋</span> Productos
+          </a>
+          <a href="sales.html" class="nav-item">
+            <span class="nav-item-icon">🛒</span> Ventas
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div>
+              <div class="user-name" id="user-name">Usuario</div>
+              <div class="user-role" id="user-role">Rol</div>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary btn-sm btn-logout"
+            onclick="logout()"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contenido -->
+      <main class="main">
+        <header class="header">
+          <div>
+            <div class="header-title">Dashboard</div>
+            <div class="header-breadcrumb">Resumen general</div>
+          </div>
+        </header>
+
+        <div class="content">
+          <div class="metrics-grid">
+            <div class="metric-card">
+              <div class="metric-icon">📋</div>
+              <div class="metric-label">Productos activos</div>
+              <div class="metric-value" id="metric-products">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">🛒</div>
+              <div class="metric-label">Ventas registradas</div>
+              <div class="metric-value" id="metric-sales">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">👥</div>
+              <div class="metric-label">Clientes</div>
+              <div class="metric-value" id="metric-clients">—</div>
+            </div>
+            <div class="metric-card">
+              <div class="metric-icon">⚠️</div>
+              <div class="metric-label">Stock bajo (&lt;10)</div>
+              <div class="metric-value" id="metric-lowstock">—</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Últimas ventas</span>
+              <a href="sales-form.html" class="btn btn-primary btn-sm"
+                >+ Nueva venta</a
+              >
+            </div>
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Cliente</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+                  </tr>
+                </thead>
+                <tbody id="recent-sales-tbody">
+                  <tr>
+                    <td
+                      colspan="4"
+                      class="text-center text-muted"
+                      style="padding: 24px"
+                    >
+                      Cargando...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+      requireAuth();
+      renderUserInfo();
+
+      async function loadDashboard() {
+        try {
+          const [products, sales, clients] = await Promise.all([
+            api.get("/api/products"),
+            api.get("/api/sales"),
+            api.get("/api/clients"),
+          ]);
+
+          document.getElementById("metric-products").textContent =
+            products.length;
+          document.getElementById("metric-sales").textContent = sales.length;
+          document.getElementById("metric-clients").textContent =
+            clients.length;
+
+          const lowStock = products.filter((p) => p.stock < 10).length;
+          document.getElementById("metric-lowstock").textContent = lowStock;
+
+          const recentSales = sales.slice(0, 5);
+          const tbody = document.getElementById("recent-sales-tbody");
+
+          if (recentSales.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted" style="padding:24px">No hay ventas aún</td></tr>`;
+          } else {
+            tbody.innerHTML = recentSales
+              .map(
+                (s) => `
+          <tr>
+            <td>#${s.id}</td>
+            <td>${s.client_name || "—"}</td>
+            <td class="fw-bold">$${Number(s.total).toLocaleString("es-CO")}</td>
+            <td class="text-muted">${new Date(s.created_at).toLocaleDateString("es-CO")}</td>
+          </tr>
+        `,
+              )
+              .join("");
+          }
+        } catch (error) {
+          console.error("Error cargando dashboard:", error.message);
+        }
+      }
+
+      loadDashboard();
+    </script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registro — StockManager</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/auth.css" />
+  </head>
+  <body>
+    <div class="auth-page">
+      <div class="auth-card">
+        <div class="auth-logo">
+          <div class="auth-logo-icon">📦</div>
+          <span class="auth-logo-text">StockManager</span>
+        </div>
+
+        <h1 class="auth-title">Crear cuenta</h1>
+        <p class="auth-subtitle">Completa los datos para registrarte</p>
+
+        <div id="alert" class="alert alert-error"></div>
+        <div id="alert-success" class="alert alert-success"></div>
+
+        <form id="register-form" class="auth-form" novalidate>
+          <div class="form-group">
+            <label for="fullName">Nombre completo</label>
+            <input
+              type="text"
+              id="fullName"
+              name="fullName"
+              placeholder="Juan Pérez"
+              autocomplete="name"
+            />
+            <span id="fullName-error" class="field-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Correo electrónico</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="juan@ejemplo.com"
+              autocomplete="email"
+            />
+            <span id="email-error" class="field-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Contraseña</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Mínimo 6 caracteres"
+              autocomplete="new-password"
+            />
+            <span id="password-error" class="field-error"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword">Confirmar contraseña</label>
+            <input
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              placeholder="Repite tu contraseña"
+              autocomplete="new-password"
+            />
+            <span id="confirmPassword-error" class="field-error"></span>
+          </div>
+
+          <button
+            type="submit"
+            id="submit-btn"
+            class="btn btn-primary auth-submit"
+          >
+            Registrarse
+          </button>
+        </form>
+
+        <p class="auth-footer">
+          ¿Ya tienes cuenta?
+          <a href="login.html">Iniciar sesión</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+      initRegister();
+    </script>
+  </body>
+</html>

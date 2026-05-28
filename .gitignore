@@ -1,0 +1,29 @@
+# Dependencias
+node_modules/
+Back/node_modules/
+Front/node_modules/
+
+# Variables de entorno (contienen contraseñas)
+Back/.env
+.env
+
+# Evidencias y reportes generados automáticamente
+evidencias/capturas-automaticas/
+evidencias/reporte-html/
+evidencias/capturas/
+
+# Logs de Node.js
+*.log
+npm-debug.log*
+
+# Caché de Playwright
+playwright-report/
+test-results/
+
+# Caché de TypeScript
+*.tsbuildinfo
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+desktop.ini

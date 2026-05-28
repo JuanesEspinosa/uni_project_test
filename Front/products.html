@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Productos — StockManager</title>
+    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-icon">📦</div>
+          <span class="sidebar-logo-name">StockManager</span>
+        </div>
+        <nav class="sidebar-nav">
+          <span class="sidebar-section-label">General</span>
+          <a href="dashboard.html" class="nav-item">
+            <span class="nav-item-icon">🏠</span> Dashboard
+          </a>
+          <span class="sidebar-section-label">Gestión</span>
+          <a href="products.html" class="nav-item active">
+            <span class="nav-item-icon">📋</span> Productos
+          </a>
+          <a href="sales.html" class="nav-item">
+            <span class="nav-item-icon">🛒</span> Ventas
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <div class="user-info">
+            <div class="user-avatar" id="user-avatar">A</div>
+            <div>
+              <div class="user-name" id="user-name">Usuario</div>
+              <div class="user-role" id="user-role">Rol</div>
+            </div>
+          </div>
+          <button
+            class="btn btn-secondary btn-sm btn-logout"
+            onclick="logout()"
+          >
+            Cerrar sesión
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contenido -->
+      <main class="main">
+        <header class="header">
+          <div>
+            <div class="header-title">Productos</div>
+            <div class="header-breadcrumb">Gestión de catálogo</div>
+          </div>
+        </header>
+
+        <div class="content">
+          <div class="page-header">
+            <div>
+              <div class="page-title">Catálogo de productos</div>
+              <div class="page-subtitle">
+                Administra precios, stock y categorías
+              </div>
+            </div>
+            <a href="products-form.html" class="btn btn-primary"
+              >+ Nuevo producto</a
+            >
+          </div>
+
+          <div class="card">
+            <div class="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th class="text-right">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody id="products-tbody">
+                  <tr>
+                    <td
+                      colspan="5"
+                      class="text-center text-muted"
+                      style="padding: 32px"
+                    >
+                      Cargando...
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div id="empty-state" class="empty-state" style="display: none">
+              <p>No hay productos registrados aún</p>
+              <a href="products-form.html" class="btn btn-primary"
+                >Crear primer producto</a
+              >
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/products.js"></script>
+    <script>
+      initProducts();
+    </script>
+  </body>
+</html>
