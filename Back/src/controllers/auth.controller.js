@@ -81,14 +81,27 @@ async function register(req, res) {
     const passwordHash = await bcrypt.hash(password, 10);
     const assignedRole = role === "seller" ? "seller" : "admin";
 
-    const result = await pool.query(
-      `INSERT INTO users (full_name, email, password, role)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id, full_name, email, role, created_at`,
-      [fullName, email, passwordHash, assignedRole],
-    );
-
-    const newUser = result.rows[0];
+    let newUser;
+    if (pool.isMySQL) {
+      const result = await pool.query(
+        `INSERT INTO users (full_name, email, password, role)
+         VALUES ($1, $2, $3, $4)`,
+        [fullName, email, passwordHash, assignedRole],
+      );
+      const selectResult = await pool.query(
+        `SELECT id, full_name, email, role, created_at FROM users WHERE id = $1`,
+        [result.insertId],
+      );
+      newUser = selectResult.rows[0];
+    } else {
+      const result = await pool.query(
+        `INSERT INTO users (full_name, email, password, role)
+         VALUES ($1, $2, $3, $4)
+         RETURNING id, full_name, email, role, created_at`,
+        [fullName, email, passwordHash, assignedRole],
+      );
+      newUser = result.rows[0];
+    }
 
     res.status(201).json({
       message: "Usuario registrado exitosamente",

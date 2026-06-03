@@ -46,22 +46,43 @@ async function create(req, res) {
   }
 
   try {
-    const result = await pool.query(
-      `INSERT INTO products (name, description, price, stock, category)
-       VALUES ($1, $2, $3, $4, $5)
-       RETURNING id, name, description, price, stock, category, created_at`,
-      [
-        name.trim(),
-        description || null,
-        Number(price),
-        stockValue,
-        category || null,
-      ],
-    );
+    let product;
+    if (pool.isMySQL) {
+      const result = await pool.query(
+        `INSERT INTO products (name, description, price, stock, category)
+         VALUES ($1, $2, $3, $4, $5)`,
+        [
+          name.trim(),
+          description || null,
+          Number(price),
+          stockValue,
+          category || null,
+        ],
+      );
+      const selectResult = await pool.query(
+        `SELECT id, name, description, price, stock, category, created_at FROM products WHERE id = $1`,
+        [result.insertId],
+      );
+      product = selectResult.rows[0];
+    } else {
+      const result = await pool.query(
+        `INSERT INTO products (name, description, price, stock, category)
+         VALUES ($1, $2, $3, $4, $5)
+         RETURNING id, name, description, price, stock, category, created_at`,
+        [
+          name.trim(),
+          description || null,
+          Number(price),
+          stockValue,
+          category || null,
+        ],
+      );
+      product = result.rows[0];
+    }
 
     res.status(201).json({
       message: "Producto creado exitosamente",
-      product: result.rows[0],
+      product,
     });
   } catch (error) {
     console.error("Error al crear producto:", error.message);
@@ -89,26 +110,49 @@ async function update(req, res) {
   }
 
   try {
-    const result = await pool.query(
-      `UPDATE products
-       SET name = $1, description = $2, price = $3, stock = $4, category = $5, updated_at = NOW()
-       WHERE id = $6 AND is_active = TRUE
-       RETURNING id, name, description, price, stock, category, updated_at`,
-      [
-        name.trim(),
-        description || null,
-        Number(price),
-        Number(stock),
-        category || null,
-        id,
-      ],
-    );
+    let product;
+    if (pool.isMySQL) {
+      await pool.query(
+        `UPDATE products
+         SET name = $1, description = $2, price = $3, stock = $4, category = $5, updated_at = NOW()
+         WHERE id = $6 AND is_active = TRUE`,
+        [
+          name.trim(),
+          description || null,
+          Number(price),
+          Number(stock),
+          category || null,
+          id,
+        ],
+      );
+      const selectResult = await pool.query(
+        `SELECT id, name, description, price, stock, category, updated_at FROM products WHERE id = $1 AND is_active = TRUE`,
+        [id],
+      );
+      product = selectResult.rows[0];
+    } else {
+      const result = await pool.query(
+        `UPDATE products
+         SET name = $1, description = $2, price = $3, stock = $4, category = $5, updated_at = NOW()
+         WHERE id = $6 AND is_active = TRUE
+         RETURNING id, name, description, price, stock, category, updated_at`,
+        [
+          name.trim(),
+          description || null,
+          Number(price),
+          Number(stock),
+          category || null,
+          id,
+        ],
+      );
+      product = result.rows[0];
+    }
 
-    if (result.rows.length === 0) {
+    if (!product) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
 
-    res.json({ message: "Producto actualizado", product: result.rows[0] });
+    res.json({ message: "Producto actualizado", product });
   } catch (error) {
     console.error("Error al actualizar producto:", error.message);
     res.status(500).json({ error: "Error interno del servidor" });
@@ -120,14 +164,32 @@ async function remove(req, res) {
   const { id } = req.params;
 
   try {
-    const result = await pool.query(
-      `UPDATE products SET is_active = FALSE, updated_at = NOW()
-       WHERE id = $1 AND is_active = TRUE
-       RETURNING id`,
-      [id],
-    );
+    let deleted = false;
+    if (pool.isMySQL) {
+      const checkResult = await pool.query(
+        `SELECT id FROM products WHERE id = $1 AND is_active = TRUE`,
+        [id]
+      );
+      if (checkResult.rows.length > 0) {
+        await pool.query(
+          `UPDATE products SET is_active = FALSE, updated_at = NOW() WHERE id = $1`,
+          [id]
+        );
+        deleted = true;
+      }
+    } else {
+      const result = await pool.query(
+        `UPDATE products SET is_active = FALSE, updated_at = NOW()
+         WHERE id = $1 AND is_active = TRUE
+         RETURNING id`,
+        [id],
+      );
+      if (result.rows.length > 0) {
+        deleted = true;
+      }
+    }
 
-    if (result.rows.length === 0) {
+    if (!deleted) {
       return res.status(404).json({ error: "Producto no encontrado" });
     }
 

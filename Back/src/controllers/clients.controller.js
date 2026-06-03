@@ -26,16 +26,31 @@ async function create(req, res) {
   }
 
   try {
-    const result = await pool.query(
-      `INSERT INTO clients (full_name, email, phone)
-       VALUES ($1, $2, $3)
-       RETURNING id, full_name, email, phone, created_at`,
-      [fullName.trim(), email || null, phone || null],
-    );
+    let client;
+    if (pool.isMySQL) {
+      const result = await pool.query(
+        `INSERT INTO clients (full_name, email, phone)
+         VALUES ($1, $2, $3)`,
+        [fullName.trim(), email || null, phone || null],
+      );
+      const selectResult = await pool.query(
+        `SELECT id, full_name, email, phone, created_at FROM clients WHERE id = $1`,
+        [result.insertId],
+      );
+      client = selectResult.rows[0];
+    } else {
+      const result = await pool.query(
+        `INSERT INTO clients (full_name, email, phone)
+         VALUES ($1, $2, $3)
+         RETURNING id, full_name, email, phone, created_at`,
+        [fullName.trim(), email || null, phone || null],
+      );
+      client = result.rows[0];
+    }
 
     res.status(201).json({
       message: "Cliente creado exitosamente",
-      client: result.rows[0],
+      client,
     });
   } catch (error) {
     console.error("Error al crear cliente:", error.message);

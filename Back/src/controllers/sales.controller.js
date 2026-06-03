@@ -125,14 +125,23 @@ async function create(req, res) {
     }
 
     // Crear la cabecera de la venta
-    const saleResult = await client.query(
-      `INSERT INTO sales (client_id, user_id, total, notes)
-       VALUES ($1, $2, $3, $4)
-       RETURNING id`,
-      [clientId, req.user.id, total, notes || null],
-    );
-
-    const saleId = saleResult.rows[0].id;
+    let saleId;
+    if (pool.isMySQL) {
+      const saleResult = await client.query(
+        `INSERT INTO sales (client_id, user_id, total, notes)
+         VALUES ($1, $2, $3, $4)`,
+        [clientId, req.user.id, total, notes || null],
+      );
+      saleId = saleResult.insertId;
+    } else {
+      const saleResult = await client.query(
+        `INSERT INTO sales (client_id, user_id, total, notes)
+         VALUES ($1, $2, $3, $4)
+         RETURNING id`,
+        [clientId, req.user.id, total, notes || null],
+      );
+      saleId = saleResult.rows[0].id;
+    }
 
     // Insertar items y descontar stock
     for (const item of resolvedItems) {

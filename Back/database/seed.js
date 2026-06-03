@@ -10,16 +10,8 @@
  */
 
 require("dotenv").config();
-const { Pool } = require("pg");
+const pool = require("../src/config/db");
 const bcrypt = require("bcrypt");
-
-const pool = new Pool({
-  host: process.env.DB_HOST,
-  port: process.env.DB_PORT,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-});
 
 async function seed() {
   const client = await pool.connect();
@@ -50,7 +42,7 @@ async function seed() {
 
     // ── Clientes ──────────────────────────────────────────────
     const clientesExistentes = await client.query(
-      "SELECT COUNT(*) FROM clients",
+      "SELECT COUNT(*) AS count FROM clients",
     );
     if (parseInt(clientesExistentes.rows[0].count) === 0) {
       await client.query(
@@ -66,7 +58,7 @@ async function seed() {
 
     // ── Productos ─────────────────────────────────────────────
     const productosExistentes = await client.query(
-      "SELECT COUNT(*) FROM products",
+      "SELECT COUNT(*) AS count FROM products",
     );
     if (parseInt(productosExistentes.rows[0].count) === 0) {
       await client.query(

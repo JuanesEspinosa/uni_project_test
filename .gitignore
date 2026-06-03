@@ -27,3 +27,17 @@ test-results/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Editores e IDEs
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Logs de pnpm/yarn adicionales
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
