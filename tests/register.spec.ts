@@ -30,7 +30,7 @@ test.describe("MÓDULO: Registro de Usuario", () => {
     });
 
     await page.click('button[type="submit"]');
-    await page.waitForTimeout(2000);
+    await page.waitForTimeout(500);
     await page.screenshot({ path: captura("CP-REG-001", "03-resultado") });
 
     const alertSuccess = page.locator("#alert-success");

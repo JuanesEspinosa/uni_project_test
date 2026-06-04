@@ -170,7 +170,7 @@ function initRegister() {
       hideAlert(alertEl);
       setTimeout(() => {
         window.location.href = "/login.html";
-      }, 2000);
+      }, 3000);
     } catch (error) {
       showAlert(alertEl, error.message);
     } finally {
