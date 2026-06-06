@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mempunk project:*)",
+      "Bash(mempunk session:*)",
+      "Bash(mempunk backlog:*)",
+      "Bash(mempunk skill:*)",
+      "Bash(mempunk decision:*)"
+    ]
+  }
+}
